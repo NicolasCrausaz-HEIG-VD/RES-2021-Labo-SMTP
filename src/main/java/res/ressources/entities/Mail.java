@@ -12,4 +12,16 @@ public class Mail
         this.addressEmailTo = addressEmailTo;
         this.message = message;
     }
+
+    public String getAddressEmailFrom() {
+        return addressEmailFrom;
+    }
+
+    public String getAddressEmailTo() {
+        return addressEmailTo;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
