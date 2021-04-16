@@ -1,12 +1,14 @@
 package res.ressources.smtp;
 
 import res.ressources.entities.Mail;
+import res.ressources.entities.Person;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.LinkedList;
 
 public class SMTPClient implements ISMTPCLient
 {
@@ -27,8 +29,6 @@ public class SMTPClient implements ISMTPCLient
 
     public boolean connect()
     {
-        String line = "";
-
         try
         {
             clientSocket = new Socket(smtpAdress, smtpPort);
@@ -36,17 +36,6 @@ public class SMTPClient implements ISMTPCLient
             {
                 inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 outputStream = new PrintWriter(clientSocket.getOutputStream());
-
-                // first line
-                /*line = inputStream.readLine();
-
-                // ignore the next lines
-                String nextLine;
-                nextLine = inputStream.readLine();
-                while (nextLine != null)
-                {
-                    nextLine = inputStream.readLine();
-                }*/
             }
             catch (IOException e)
             {
@@ -59,11 +48,6 @@ public class SMTPClient implements ISMTPCLient
             e.printStackTrace();
             return false;
         }
-
-        /*if(!line.equals("Connected to" + smtpAdress))
-        {
-            return false;
-        }*/
 
         return true;
     }
@@ -110,22 +94,41 @@ public class SMTPClient implements ISMTPCLient
 
         pass();
 
-        outputStream.println("MAIL FROM: " + mail.getAddressEmailFrom());
+        outputStream.println("MAIL FROM: " + mail.getFrom());
         outputStream.flush();
 
         pass();
 
-        outputStream.println("RCPT TO: " + mail.getAddressEmailTo());
-
-        pass();
+        for (Person p : mail.getTo().getVictims())
+        {
+            outputStream.println("RCPT TO: " + p.getEmail());
+            outputStream.flush();
+            pass();
+        }
 
         outputStream.println("DATA");
         outputStream.flush();
 
         pass();
 
-        outputStream.println("From: " + mail.getAddressEmailFrom());
-        outputStream.println("To: " + mail.getAddressEmailTo());
+        outputStream.println("From: " + mail.getTo().getPranker().getEmail());
+
+        final LinkedList<Person> victims = mail.getTo().getVictims();
+        final int size = victims.size();
+
+        outputStream.print("To: ");
+
+        for(int i = 0; i < size; ++i)
+        {
+            outputStream.print(victims.get(i).getEmail());
+
+            if(i < size-1)
+            {
+                outputStream.print(",");
+            }
+        }
+        outputStream.print("\n");
+
         outputStream.println("Subject: " + mail.getSubject() + "\n");
         outputStream.println(mail.getMessage());
         outputStream.println(".");
@@ -133,7 +136,7 @@ public class SMTPClient implements ISMTPCLient
 
         pass();
 
-        outputStream.println("quit");
+        outputStream.println("QUIT");
         outputStream.flush();
 
         close();
@@ -191,18 +194,5 @@ public class SMTPClient implements ISMTPCLient
         {
             e.printStackTrace();
         }
-    }
-
-    public boolean isAValidEmail(String email)
-    {
-        /*Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
-        Matcher mat = pattern.matcher(email);
-
-        if(mat.matches())
-        {
-            return true;
-        }*/
-
-        return false;
     }
 }

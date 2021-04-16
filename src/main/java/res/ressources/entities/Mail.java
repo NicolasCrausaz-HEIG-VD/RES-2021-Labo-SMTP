@@ -2,26 +2,26 @@ package res.ressources.entities;
 
 public class Mail
 {
-    private String addressEmailFrom;
-    private String addressEmailTo;
+    private final String from;
+    private final Group to;
 
-    private String subject;
-    private String message;
+    private final String subject;
+    private final String message;
 
-    public Mail(String addressEmailFrom, String addressEmailTo, String subject, String message)
+    public Mail(String from, Group to, String subject, String message)
     {
-        this.addressEmailFrom = addressEmailFrom;
-        this.addressEmailTo = addressEmailTo;
+        this.from = from;
+        this.to = to;
         this.subject = subject;
         this.message = message;
     }
 
-    public String getAddressEmailFrom() {
-        return addressEmailFrom;
+    public String getFrom() {
+        return from;
     }
 
-    public String getAddressEmailTo() {
-        return addressEmailTo;
+    public Group getTo() {
+        return to;
     }
 
     public String getSubject() {
