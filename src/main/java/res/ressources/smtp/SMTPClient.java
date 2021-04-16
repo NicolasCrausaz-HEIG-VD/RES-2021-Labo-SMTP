@@ -103,91 +103,43 @@ public class SMTPClient implements ISMTPCLient
             close();
         }
 
+        pass();
+
         outputStream.println("EHLO " + clientName);
         outputStream.flush();
 
-        //pass();
+        pass();
 
         outputStream.println("MAIL FROM: " + mail.getAddressEmailFrom());
         outputStream.flush();
 
-        //pass();
+        pass();
 
         outputStream.println("RCPT TO: " + mail.getAddressEmailTo());
 
-        //pass();
+        pass();
 
         outputStream.println("DATA");
         outputStream.flush();
 
-        //pass();
+        pass();
 
-        outputStream.println(mail.getMessage() + "<cr><lf>.</lf></cr>");
+        outputStream.println("From: " + mail.getAddressEmailFrom());
+        outputStream.println("To: " + mail.getAddressEmailTo());
+        outputStream.println("Subject: " + mail.getSubject() + "\n");
+        outputStream.println(mail.getMessage());
+        outputStream.println(".");
         outputStream.flush();
 
-        //pass();
+        pass();
 
-        outputStream.println(mail.getMessage() + "quit");
+        outputStream.println("quit");
         outputStream.flush();
-
 
         close();
-
-        /*String line;
-
-        line = inputStream.readLine();
-        System.out.println(line);
-
-        String userLine;
-        while (!clientSocket.isClosed() && shouldRun)
-        {
-
-            //Lire l'entée utilisateur et l'envoyer au serveur
-            if ((userLine = input.readLine()) != null)
-            {
-                outputStream.println(userLine);
-                outputStream.flush();
-
-                // arrête le client si QUIT (après l'avoir envoyé au serv)
-                if (userLine.toUpperCase().equals("QUIT"))
-                {
-
-                }
-            }
-
-            //Lit la réponse du serv
-            if ((line = inputStream.readLine() + " : " + inputStream.readLine()) != null)
-            {
-                System.out.println(line);
-            }
-        }
-
-        finally
-        {
-            try
-            {
-                inputStream.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            if (outputStream != null)
-            {
-                outputStream.close();
-            }
-            try
-            {
-                clientSocket.close();
-            }
-            catch (IOException ex)
-            {
-                ex.printStackTrace();
-            }
-        }*/
     }
 
-    public boolean printMessage(String message, String waitedResponse)
+    public boolean sendTextToServ(String message, String waitedResponse)
     {
         String response;
 
@@ -229,8 +181,9 @@ public class SMTPClient implements ISMTPCLient
             // ignore the next lines
             String line;
             line = inputStream.readLine();
-            while (line != null)
+            while (line != null && !line.isEmpty() && line.equals("\r"))
             {
+                System.out.println(line);
                 line = inputStream.readLine();
             }
         }
@@ -252,29 +205,4 @@ public class SMTPClient implements ISMTPCLient
 
         return false;
     }
-
-    /*public boolean connectToCompany()
-    {
-        String response;
-
-        outputStream.println("EHLO " + company);
-        outputStream.flush();
-
-        try
-        {
-            response = inputStream.readLine();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-
-        if(!response.equals())
-        {
-            return false;
-        }
-
-        return true;
-    }*/
 }

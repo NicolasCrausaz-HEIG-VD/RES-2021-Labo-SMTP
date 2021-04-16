@@ -18,14 +18,9 @@ public class SMTPClientTest
     @Test
     public void testValidMail()
     {
-        SMTPClient smtpClient = new SMTPClient(25, "localhost", "alec");
+        SMTPClient smtpClient = new SMTPClient(25, "localhost", "RobotApp");
 
-        String message = "From: test@test.com\n";
-        message += "To: alec.berney@heig-vd.ch\n";
-        message += "Subject: test\n";
-        message += "test";
-
-        Mail mail = new Mail("beral@sevjnet.ch", "alec.berney@heig-vd.ch", message);
+        Mail mail = new Mail("test@test.com", "test2@test2.test2", "test", "message");
 
         smtpClient.sendMail(mail);
     }
