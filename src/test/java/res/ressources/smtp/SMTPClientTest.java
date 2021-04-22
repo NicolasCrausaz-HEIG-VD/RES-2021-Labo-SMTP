@@ -31,7 +31,7 @@ public class SMTPClientTest
 
         Group group = new Group(persons);
 
-        Mail mail = new Mail("test@test.com", group, "test", "message");
+        Mail mail = new Mail("test@test.com", group, "àààééà?§", "message");
 
         smtpClient.sendMail(mail);
     }

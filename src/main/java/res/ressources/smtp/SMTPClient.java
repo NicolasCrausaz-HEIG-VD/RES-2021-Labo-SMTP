@@ -8,13 +8,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Base64;
 import java.util.LinkedList;
 
 public class SMTPClient implements ISMTPCLient
 {
-    private int smtpPort;
-    private String smtpAdress;
-    private String clientName;
+    private final int smtpPort;
+    private final String smtpAdress;
+    private final String clientName;
 
     private Socket clientSocket;
     private BufferedReader inputStream;
@@ -129,7 +130,8 @@ public class SMTPClient implements ISMTPCLient
         }
         outputStream.print("\n");
 
-        outputStream.println("Subject: " + mail.getSubject() + "\n");
+        outputStream.println("Subject: =?utf-8?B?" + Base64.getEncoder().encodeToString(mail.getSubject().getBytes()) + "?=");
+        outputStream.println("Content-Type: text/plain; charset=utf-8\n");
         outputStream.println(mail.getMessage());
         outputStream.println(".");
         outputStream.flush();
@@ -169,12 +171,7 @@ public class SMTPClient implements ISMTPCLient
             return false;
         }
 
-        if(!response.equals(waitedResponse))
-        {
-            return false;
-        }
-
-        return true;
+        return response.equals(waitedResponse);
     }
 
     void pass()
