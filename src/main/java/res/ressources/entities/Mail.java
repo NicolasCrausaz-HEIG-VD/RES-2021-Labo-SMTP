@@ -4,7 +4,6 @@ public class Mail
 {
     private final String from;
     private final Group to;
-
     private final String subject;
     private final String message;
 
