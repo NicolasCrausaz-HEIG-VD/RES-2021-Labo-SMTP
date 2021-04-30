@@ -36,6 +36,7 @@ public class PersonParser
         {
             e.printStackTrace();
         }
+
         return personsList;
     }
 }

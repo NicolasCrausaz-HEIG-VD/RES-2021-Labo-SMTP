@@ -12,19 +12,71 @@ public class ConfigManager
 {
     private static ConfigManager instance;
     private final static String PROPERTIES_PATH = System.getProperty("user.dir") + "/configs/config.properties";
-    private Properties loadedProperties;
+
+    private int SMTP_DEFAULT_PORT;
+    private String SMTP_DEFAULT_SERVER;
+    private int NUMBER_OF_GROUPS;
+    private String CLIENT_NAME;
+    private String MAIL_HIDDEN_SENDER;
+    private String MAIL_CC;
+    private String MAIL_BCC;
 
     /**
-     * Load configuration file
+     * Load configuration file,
+     * Configuration required values will be verified
+     *
+     * @throws RuntimeException if required values are missing
      */
-    private ConfigManager()
+    private ConfigManager() throws RuntimeException
     {
         try (InputStream input = new FileInputStream(PROPERTIES_PATH))
         {
-            loadedProperties = new Properties();
+            Properties loadedProperties = new Properties();
             loadedProperties.load(input);
 
-            //TODO: Valid required entries
+            if (!loadedProperties.getProperty("SMTP_DEFAULT_PORT").equals(""))
+            {
+                SMTP_DEFAULT_PORT = Integer.parseInt(loadedProperties.getProperty("SMTP_DEFAULT_PORT"));
+            } else
+            {
+                throw new RuntimeException("SMTP_DEFAULT_PORT should be specified");
+            }
+
+            if (!loadedProperties.getProperty("SMTP_DEFAULT_SERVER").equals(""))
+            {
+                SMTP_DEFAULT_SERVER = loadedProperties.getProperty("SMTP_DEFAULT_SERVER");
+            } else
+            {
+                throw new RuntimeException("SMTP_DEFAULT_SERVER should be specified");
+            }
+
+            if (!loadedProperties.getProperty("NUMBER_OF_GROUPS").equals(""))
+            {
+                NUMBER_OF_GROUPS = Integer.parseInt(loadedProperties.getProperty("NUMBER_OF_GROUPS"));
+            } else
+            {
+                throw new RuntimeException("NUMBER_OF_GROUPS should be specified");
+            }
+
+            if (!loadedProperties.getProperty("CLIENT_NAME").equals(""))
+            {
+                CLIENT_NAME = loadedProperties.getProperty("CLIENT_NAME");
+            } else
+            {
+                throw new RuntimeException("CLIENT_NAME should be specified");
+            }
+
+            if (!loadedProperties.getProperty("MAIL_HIDDEN_SENDER").equals(""))
+            {
+                MAIL_HIDDEN_SENDER = loadedProperties.getProperty("MAIL_HIDDEN_SENDER");
+            } else
+            {
+                throw new RuntimeException("MAIL_HIDDEN_SENDER should be specified");
+            }
+
+            MAIL_CC = loadedProperties.getProperty("MAIL_CC");
+            MAIL_BCC = loadedProperties.getProperty("MAIL_BCC");
+
 
         } catch (IOException ex)
         {
@@ -33,7 +85,7 @@ public class ConfigManager
     }
 
     /**
-     * Using Singleton design pattern
+     * Get instance of configuration
      *
      * @return Instance of ConfigManager
      */
@@ -53,7 +105,7 @@ public class ConfigManager
      */
     public int getSMTPPort()
     {
-        return Integer.parseInt(loadedProperties.getProperty("SMTP_DEFAULT_PORT"));
+        return SMTP_DEFAULT_PORT;
     }
 
     /**
@@ -61,7 +113,7 @@ public class ConfigManager
      */
     public String getSMTPServer()
     {
-        return loadedProperties.getProperty("SMTP_DEFAULT_SERVER");
+        return SMTP_DEFAULT_SERVER;
     }
 
     /**
@@ -71,7 +123,7 @@ public class ConfigManager
      */
     public int getNumberOfGroups()
     {
-        return Integer.parseInt(loadedProperties.getProperty("NUMBER_OF_GROUPS"));
+        return NUMBER_OF_GROUPS;
     }
 
     /**
@@ -79,7 +131,7 @@ public class ConfigManager
      */
     public String getClientName()
     {
-        return loadedProperties.getProperty("CLIENT_NAME");
+        return CLIENT_NAME;
     }
 
     /**
@@ -89,7 +141,7 @@ public class ConfigManager
      */
     public String getHiddenSender()
     {
-        return loadedProperties.getProperty("MAIL_HIDDEN_SENDER");
+        return MAIL_HIDDEN_SENDER;
     }
 
     /**
@@ -99,7 +151,7 @@ public class ConfigManager
      */
     public String getCopyRecipient()
     {
-        return loadedProperties.getProperty("MAIL_CC");
+        return MAIL_CC;
     }
 
     /**
@@ -109,6 +161,6 @@ public class ConfigManager
      */
     public String getBlindCopyRecipient()
     {
-        return loadedProperties.getProperty("MAIL_BCC");
+        return MAIL_BCC;
     }
 }
