@@ -6,10 +6,18 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
+/**
+ * Reads and parse an person list from a file
+ */
 public class PersonParser
 {
-    public static LinkedList<Person> getPersons()
+    /**
+     * Read and parse email file to a list of Persons
+     * @return List of Persons
+     */
+    public static List<Person> getPersons()
     {
         LinkedList<Person> personsList = new LinkedList<>();
 
@@ -27,7 +35,6 @@ public class PersonParser
         {
             e.printStackTrace();
         }
-
         return personsList;
     }
 }

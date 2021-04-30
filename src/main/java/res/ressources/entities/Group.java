@@ -11,7 +11,7 @@ import java.util.Random;
 public class Group
 {
     private final Person pranker;
-    private final LinkedList<Person> victims;
+    private final List<Person> victims;
 
     /**
      * Create a group of victims with one pranker
@@ -38,12 +38,20 @@ public class Group
         }
     }
 
+    /**
+     * Get the person who has the pranker role in the group
+     * @return The pranker
+     */
     public Person getPranker()
     {
         return pranker;
     }
 
-    public LinkedList<Person> getVictims()
+    /**
+     * Get the people who have the victim role in the group
+     * @return List of victims
+     */
+    public List<Person> getVictims()
     {
         return victims;
     }

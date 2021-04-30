@@ -7,30 +7,37 @@ import res.ressources.entities.Person;
 import res.ressources.entities.PersonParser;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
+/**
+ * Class that genenrate pranks and prepare them into email to be send afterwards.
+ */
 public class PrankGenerator
 {
-    private final LinkedList<Prank> pranks;
-    private final String hiddenSender;
+    private final List<Prank> pranks;
 
-    public PrankGenerator(String hiddenSender, int number)
+    public PrankGenerator()
     {
-        this.hiddenSender = hiddenSender;
-        LinkedList<Prank> fullPranks = PrankJSONParser.getPranks();
+        List<Prank> fullPranks = PrankJSONParser.getPranks();
         pranks = new LinkedList<>();
 
-        for (int i = 0; i < number; i++)
+        for (int i = 0; i < ConfigManager.getInstance().getNumberOfGroups(); i++)
         {
             int prankIndex = new Random().nextInt(fullPranks.size());
             pranks.add(fullPranks.get(prankIndex));
         }
     }
 
-    public LinkedList<Mail> preparePranksMails()
+    /**
+     * Prepare prank into mails ready to be send
+     *
+     * @return list generated mails
+     */
+    public List<Mail> preparePranksMails()
     {
-        LinkedList<Person> persons = PersonParser.getPersons();
-        LinkedList<Mail> mails = new LinkedList<>();
+        List<Person> persons = PersonParser.getPersons();
+
         final int NB_PEOPLE_IN_GROUP = persons.size() / ConfigManager.getInstance().getNumberOfGroups();
 
         if (NB_PEOPLE_IN_GROUP < 2)
@@ -46,9 +53,11 @@ public class PrankGenerator
         }
 
         int cnt = 0;
+        LinkedList<Mail> mails = new LinkedList<>();
+
         for (Prank p : pranks)
         {
-            mails.add(new Mail(hiddenSender, groups.get(cnt++), p.getSubject(), p.getBody()));
+            mails.add(new Mail(ConfigManager.getInstance().getHiddenSender(), groups.get(cnt++), p.getSubject(), p.getBody()));
         }
         return mails;
     }

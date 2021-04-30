@@ -1,5 +1,8 @@
 package res.ressources.entities;
 
+/**
+ * Represents a simple mail
+ */
 public class Mail
 {
     private final String from;
@@ -7,6 +10,12 @@ public class Mail
     private final String subject;
     private final String message;
 
+    /**
+     * @param from    hidden sender
+     * @param to      group containing 1 sender and other recipients
+     * @param subject mail's subject
+     * @param message mail's content
+     */
     public Mail(String from, Group to, String subject, String message)
     {
         this.from = from;
@@ -15,19 +24,35 @@ public class Mail
         this.message = message;
     }
 
-    public String getFrom() {
+    /**
+     * @return Hidden sender
+     */
+    public String getFrom()
+    {
         return from;
     }
 
-    public Group getTo() {
+    /**
+     * @return Group containing 1 sender and other recipients
+     */
+    public Group getTo()
+    {
         return to;
     }
 
-    public String getSubject() {
+    /**
+     * @return Mail subject
+     */
+    public String getSubject()
+    {
         return subject;
     }
 
-    public String getMessage() {
+    /**
+     * @return Mail content
+     */
+    public String getMessage()
+    {
         return message;
     }
 }

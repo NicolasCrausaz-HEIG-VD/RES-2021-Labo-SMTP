@@ -1,5 +1,6 @@
 package res.ressources.smtp;
 
+import res.ressources.config.ConfigManager;
 import res.ressources.entities.Mail;
 import res.ressources.entities.Person;
 
@@ -9,11 +10,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Base64;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * SMTP client to send mails
+ */
 public class SMTPClient implements ISMTPCLient
 {
     private final int smtpPort;
@@ -24,7 +27,7 @@ public class SMTPClient implements ISMTPCLient
     private BufferedReader inputStream;
     private PrintWriter outputStream;
 
-    final static Logger LOG = Logger.getLogger(SMTPClient.class.getName());
+    private final static Logger LOG = Logger.getLogger(SMTPClient.class.getName());
 
     public SMTPClient(int smtpPort, String smtpAddress, String clientName)
     {
@@ -33,6 +36,10 @@ public class SMTPClient implements ISMTPCLient
         this.clientName = clientName;
     }
 
+    /**
+     * Try to connect to SMTP server
+     * @return true if connected
+     */
     public boolean connect()
     {
         try
@@ -54,10 +61,12 @@ public class SMTPClient implements ISMTPCLient
             close();
             return false;
         }
-
         return true;
     }
 
+    /**
+     * Close connection to server
+     */
     public void close()
     {
         if (inputStream != null)
@@ -134,6 +143,9 @@ public class SMTPClient implements ISMTPCLient
         close();
     }
 
+    /**
+     * Read and log server response
+     */
     private void recieveServerResponse()
     {
         try
@@ -150,7 +162,14 @@ public class SMTPClient implements ISMTPCLient
         }
     }
 
-    private void sendEmailWithConnection(Mail mail, boolean keepConnection) throws RuntimeException
+    /**
+     * Send a mail, option to not close the connection after sending, used to send multiple emails without
+     * closing the connection
+     *
+     * @param mail mail to send
+     * @param keepConnection flag to stay connected after sending
+     */
+    private void sendEmailWithConnection(Mail mail, boolean keepConnection)
     {
         outputStream.println("EHLO " + clientName);
         outputStream.flush();
@@ -178,7 +197,7 @@ public class SMTPClient implements ISMTPCLient
         outputStream.println("From: " + mail.getTo().getPranker().getEmail());
         outputStream.print("To: ");
 
-        final LinkedList<Person> victims = mail.getTo().getVictims();
+        final List<Person> victims = mail.getTo().getVictims();
         final int size = victims.size();
 
         for (int i = 0; i < size; ++i)
@@ -190,7 +209,10 @@ public class SMTPClient implements ISMTPCLient
                 outputStream.print(",");
             }
         }
+
         outputStream.print("\n");
+        outputStream.println("Cc: " + ConfigManager.getInstance().getCopyRecipient());
+        outputStream.println("Bcc: " + ConfigManager.getInstance().getBlindCopyRecipient());
 
         outputStream.println("Subject: =?utf-8?B?" + Base64.getEncoder().encodeToString(mail.getSubject().getBytes()) + "?=");
         outputStream.println("Content-Type: text/plain; charset=utf-8\n");
