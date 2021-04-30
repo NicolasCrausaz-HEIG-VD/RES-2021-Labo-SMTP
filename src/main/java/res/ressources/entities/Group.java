@@ -15,6 +15,8 @@ public class Group
 
     /**
      * Create a group of victims with one pranker
+     * Selects a random person in the list as the pranker,
+     * others will be victims
      *
      * @param persons Should at least contains 2 Person
      */
@@ -23,8 +25,6 @@ public class Group
         if (persons == null || persons.size() < 2)
             throw new RuntimeException("Cannot create a group from a list of less than 2 Person");
 
-        // Select a random pranker within a person list,
-        // others will be victims
         victims = new LinkedList<>();
         int prankerId = new Random().nextInt(persons.size());
         pranker = persons.get(prankerId);

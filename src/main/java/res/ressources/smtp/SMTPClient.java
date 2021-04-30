@@ -4,11 +4,9 @@ import res.ressources.config.ConfigManager;
 import res.ressources.entities.Mail;
 import res.ressources.entities.Person;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,6 +36,7 @@ public class SMTPClient implements ISMTPCLient
 
     /**
      * Try to connect to SMTP server
+     *
      * @return true if connected
      */
     public boolean connect()
@@ -47,8 +46,8 @@ public class SMTPClient implements ISMTPCLient
             clientSocket = new Socket(smtpAddress, smtpPort);
             try
             {
-                inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                outputStream = new PrintWriter(clientSocket.getOutputStream());
+                inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8));
+                outputStream = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8));
             } catch (IOException e)
             {
                 LOG.log(Level.SEVERE, null, e);
@@ -166,7 +165,7 @@ public class SMTPClient implements ISMTPCLient
      * Send a mail, option to not close the connection after sending, used to send multiple emails without
      * closing the connection
      *
-     * @param mail mail to send
+     * @param mail           mail to send
      * @param keepConnection flag to stay connected after sending
      */
     private void sendEmailWithConnection(Mail mail, boolean keepConnection)

@@ -31,12 +31,13 @@ public class SMTPClientTest
 
         Group group = new Group(persons);
 
-        Mail mail = new Mail("test@test.com", group, "àààééà?§", "message");
+        Mail mail = new Mail("test@test.com", group, "Test caractères spéciaux",
+                "Ce message contient des caractères spéciaux");
 
         smtpClient.sendMail(mail);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testUnvalidMail()
     {
         SMTPClient smtpClient = new SMTPClient(25, "localhost", "RobotApp");

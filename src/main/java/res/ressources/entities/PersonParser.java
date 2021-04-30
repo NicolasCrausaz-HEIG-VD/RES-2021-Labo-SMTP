@@ -1,10 +1,7 @@
 package res.ressources.entities;
 
-import res.ressources.config.ConfigManager;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,15 +10,19 @@ import java.util.List;
  */
 public class PersonParser
 {
+
+    final static String EMAILS_PATH = System.getProperty("user.dir") + "/assets/emails.utf8";
+
     /**
      * Read and parse email file to a list of Persons
+     *
      * @return List of Persons
      */
     public static List<Person> getPersons()
     {
         LinkedList<Person> personsList = new LinkedList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + ConfigManager.getInstance().getEmailFile())))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(EMAILS_PATH), StandardCharsets.UTF_8)))
         {
             String line = reader.readLine();
 

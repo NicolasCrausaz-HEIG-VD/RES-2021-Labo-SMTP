@@ -39,7 +39,7 @@ public class Person
      * @param email mail address
      * @return true if format is valid, else false
      */
-    private boolean isAValidEmail(String email)
+    public static boolean isAValidEmail(String email)
     {
         Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
         return pattern.matcher(email).matches();

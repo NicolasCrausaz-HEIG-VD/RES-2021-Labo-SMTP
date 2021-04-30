@@ -4,22 +4,21 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import res.ressources.config.ConfigManager;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PrankJSONParser
 {
+    final static String PRANKS_PATH = System.getProperty("user.dir") + "/assets/pranks.json";
     public static List<Prank> getPranks()
     {
         LinkedList<Prank> pranksList = new LinkedList<>();
         JSONParser jsonParser = new JSONParser();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + ConfigManager.getInstance().getPranksFile())))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(PRANKS_PATH), StandardCharsets.UTF_8)))
         {
             Object obj = jsonParser.parse(reader);
             JSONObject jsonObject = (JSONObject) obj;

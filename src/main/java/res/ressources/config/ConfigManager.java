@@ -23,6 +23,9 @@ public class ConfigManager
         {
             loadedProperties = new Properties();
             loadedProperties.load(input);
+
+            //TODO: Valid required entries
+
         } catch (IOException ex)
         {
             ex.printStackTrace();
@@ -81,6 +84,7 @@ public class ConfigManager
 
     /**
      * The "real sender" of the mails
+     *
      * @return hidden sender
      */
     public String getHiddenSender()
@@ -106,25 +110,5 @@ public class ConfigManager
     public String getBlindCopyRecipient()
     {
         return loadedProperties.getProperty("MAIL_BCC");
-    }
-
-    /**
-     * Path to emails file
-     *
-     * @return
-     */
-    public String getEmailFile()
-    {
-        return loadedProperties.getProperty("EMAILS_FILEPATH");
-    }
-
-    /**
-     * Path to pranks file
-     *
-     * @return
-     */
-    public String getPranksFile()
-    {
-        return loadedProperties.getProperty("PRANKS_FILEPATH");
     }
 }

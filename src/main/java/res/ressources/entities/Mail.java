@@ -15,9 +15,12 @@ public class Mail
      * @param to      group containing 1 sender and other recipients
      * @param subject mail's subject
      * @param message mail's content
+     * @throws RuntimeException if from is not a valid mail address format
      */
-    public Mail(String from, Group to, String subject, String message)
+    public Mail(String from, Group to, String subject, String message) throws RuntimeException
     {
+        if (!Person.isAValidEmail(from)) throw new RuntimeException("Invalid mail format");
+
         this.from = from;
         this.to = to;
         this.subject = subject;
