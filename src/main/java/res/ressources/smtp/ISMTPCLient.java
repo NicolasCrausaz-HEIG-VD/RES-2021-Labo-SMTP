@@ -8,5 +8,5 @@ public interface ISMTPCLient
 {
     void sendMail(Mail mail);
 
-    // void sendMultipleMails(List<Mail> mails);
+    void sendMultipleMails(List<Mail> mails);
 }

@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class SMTPClient implements ISMTPCLient
 {
     private final int smtpPort;
-    private final String smtpAdress;
+    private final String smtpAddress;
     private final String clientName;
 
     private Socket clientSocket;
@@ -26,30 +26,28 @@ public class SMTPClient implements ISMTPCLient
 
     final static Logger LOG = Logger.getLogger(SMTPClient.class.getName());
 
-    public SMTPClient(int smtpPort, String smtpAdress, String clientName)
+    public SMTPClient(int smtpPort, String smtpAddress, String clientName)
     {
         this.smtpPort = smtpPort;
-        this.smtpAdress = smtpAdress;
+        this.smtpAddress = smtpAddress;
         this.clientName = clientName;
     }
 
     public boolean connect()
     {
-        try
-        {
-            clientSocket = new Socket(smtpAdress, smtpPort);
-            try
-            {
+        try {
+            clientSocket = new Socket(smtpAddress, smtpPort);
+            try {
                 inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 outputStream = new PrintWriter(clientSocket.getOutputStream());
-            } catch (IOException e)
-            {
-                e.printStackTrace();
+            } catch (IOException e) {
+                LOG.log(Level.SEVERE, null, e);
+                close();
                 return false;
             }
-        } catch (IOException e)
-        {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, null, e);
+            close();
             return false;
         }
 
@@ -58,25 +56,35 @@ public class SMTPClient implements ISMTPCLient
 
     public void close()
     {
-        try
+        //outputStream.println("QUIT");
+        //outputStream.flush();
+        //recieveServerResponse();
+
+        if(inputStream != null)
         {
-            inputStream.close();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                LOG.log(Level.SEVERE, null, e);
+            }
         }
 
         if (outputStream != null)
         {
-            outputStream.close();
+            try {
+                outputStream.close();
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
+            }
         }
 
-        try
+        if(clientSocket != null)
         {
-            clientSocket.close();
-        } catch (IOException ex)
-        {
-            ex.printStackTrace();
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                LOG.log(Level.SEVERE, null, e);
+            }
         }
     }
 
@@ -86,7 +94,6 @@ public class SMTPClient implements ISMTPCLient
         if (!connect())
         {
             System.out.println("Connection error occured");
-            close();
         }
 
         sendEmailWithConnection(mail, false);
@@ -94,7 +101,7 @@ public class SMTPClient implements ISMTPCLient
         close();
     }
 
-    /*
+
     @Override
     public void sendMultipleMails(List<Mail> mails)
     {
@@ -104,8 +111,6 @@ public class SMTPClient implements ISMTPCLient
             close();
         }
 
-
-
         for (Mail m : mails)
         {
             sendEmailWithConnection(m, true);
@@ -113,54 +118,48 @@ public class SMTPClient implements ISMTPCLient
 
         close();
     }
-*/
 
-    void pass()
+    private void recieveServerResponse()
     {
-        try
-        {
-            // ignore the next lines
+        try {
+            // Print the server response in logs
             String line;
-            line = inputStream.readLine();
-            while (line != null && !line.isEmpty() && line.equals("\r"))
+            while (inputStream.ready() && (line = inputStream.readLine()) != null)
             {
-                System.out.println(line);
-                LOG.log(Level.INFO, "test: {0}", line);
-                line = inputStream.readLine();
+                LOG.log(Level.INFO, line);
             }
-        } catch (IOException e)
-        {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, null, e);
         }
     }
 
     private void sendEmailWithConnection(Mail mail, boolean keepConnection) throws RuntimeException
     {
-        pass();
+        recieveServerResponse();
         outputStream.println("EHLO " + clientName);
         outputStream.flush();
-        pass();
+        recieveServerResponse();
 
         outputStream.println("MAIL FROM: " + mail.getFrom());
         outputStream.flush();
+        recieveServerResponse();
 
         for (Person p : mail.getTo().getVictims())
         {
             outputStream.println("RCPT TO: " + p.getEmail());
             outputStream.flush();
+            recieveServerResponse();
         }
 
         outputStream.println("DATA");
         outputStream.flush();
-
-        //pass();
+        recieveServerResponse();
 
         outputStream.println("From: " + mail.getTo().getPranker().getEmail());
         outputStream.print("To: ");
 
         final LinkedList<Person> victims = mail.getTo().getVictims();
         final int size = victims.size();
-
 
         for (int i = 0; i < size; ++i)
         {
@@ -179,15 +178,19 @@ public class SMTPClient implements ISMTPCLient
 
         outputStream.println(".");
         outputStream.flush();
+        recieveServerResponse();
 
         if (keepConnection)
         {
             // TODO: Faire RSET
+            outputStream.println("RSET");
+            outputStream.flush();
         } else
         {
-            pass();
+
             outputStream.println("QUIT");
             outputStream.flush();
         }
+        recieveServerResponse();
     }
 }
