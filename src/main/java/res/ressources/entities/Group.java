@@ -1,6 +1,7 @@
 package res.ressources.entities;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -17,22 +18,22 @@ public class Group
      *
      * @param persons Should at least contains 2 Person
      */
-    public Group(Person[] persons)
+    public Group(List<Person> persons)
     {
-        if (persons == null || persons.length < 2)
+        if (persons == null || persons.size() < 2)
             throw new RuntimeException("Cannot create a group from a list of less than 2 Person");
 
         // Select a random pranker within a person list,
         // others will be victims
         victims = new LinkedList<>();
-        int prankerId = new Random().nextInt(persons.length);
-        pranker = persons[prankerId];
+        int prankerId = new Random().nextInt(persons.size());
+        pranker = persons.get(prankerId);
 
-        for (int i = 0; i < persons.length; i++)
+        for (int i = 0; i < persons.size(); i++)
         {
             if (i != prankerId)
             {
-                victims.add(persons[i]);
+                victims.add(persons.get(i));
             }
         }
     }

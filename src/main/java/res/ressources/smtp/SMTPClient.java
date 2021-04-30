@@ -10,6 +10,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Base64;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SMTPClient implements ISMTPCLient
 {
@@ -21,12 +24,7 @@ public class SMTPClient implements ISMTPCLient
     private BufferedReader inputStream;
     private PrintWriter outputStream;
 
-    static final String CONNECTION_OK = "220";
-    static final String COMMAND_OK = "250";
-    static final String WRITING_MAIL = "354";
-    static final String QUIT_OK = "221";
-
-    //final static Logger LOG = Logger.getLogger(SingleThreadedServer.class.getName());
+    final static Logger LOG = Logger.getLogger(SMTPClient.class.getName());
 
     public SMTPClient(int smtpPort, String smtpAdress, String clientName)
     {
@@ -85,47 +83,84 @@ public class SMTPClient implements ISMTPCLient
     @Override
     public void sendMail(Mail mail)
     {
-        // TODO: vérifier les retours de sendTextToServ -> arrêter ou réessayer?
         if (!connect())
         {
             System.out.println("Connection error occured");
             close();
         }
 
-        pass();
+        sendEmailWithConnection(mail, false);
 
-        sendTextToServ("EHLO " + clientName, COMMAND_OK);
-        // outputStream.println("EHLO " + clientName, COMMAND_OK);
+        close();
+    }
+
+    /*
+    @Override
+    public void sendMultipleMails(List<Mail> mails)
+    {
+        if (!connect())
+        {
+            System.out.println("Connection error occured");
+            close();
+        }
+
+
+
+        for (Mail m : mails)
+        {
+            sendEmailWithConnection(m, true);
+        }
+
+        close();
+    }
+*/
+
+    void pass()
+    {
+        try
+        {
+            // ignore the next lines
+            String line;
+            line = inputStream.readLine();
+            while (line != null && !line.isEmpty() && line.equals("\r"))
+            {
+                System.out.println(line);
+                LOG.log(Level.INFO, "test: {0}", line);
+                line = inputStream.readLine();
+            }
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendEmailWithConnection(Mail mail, boolean keepConnection) throws RuntimeException
+    {
+        pass();
+        outputStream.println("EHLO " + clientName);
         outputStream.flush();
-
         pass();
 
-        sendTextToServ("MAIL FROM: " + mail.getFrom(), COMMAND_OK);
         outputStream.println("MAIL FROM: " + mail.getFrom());
         outputStream.flush();
 
-        // pass();
-
         for (Person p : mail.getTo().getVictims())
         {
-            sendTextToServ("RCPT TO: " + p.getEmail(), COMMAND_OK);
             outputStream.println("RCPT TO: " + p.getEmail());
             outputStream.flush();
-            //pass();
         }
 
-        sendTextToServ("DATA", WRITING_MAIL);
         outputStream.println("DATA");
         outputStream.flush();
 
-        pass();
+        //pass();
 
         outputStream.println("From: " + mail.getTo().getPranker().getEmail());
+        outputStream.print("To: ");
 
         final LinkedList<Person> victims = mail.getTo().getVictims();
         final int size = victims.size();
 
-        outputStream.print("To: ");
 
         for (int i = 0; i < size; ++i)
         {
@@ -141,73 +176,18 @@ public class SMTPClient implements ISMTPCLient
         outputStream.println("Subject: =?utf-8?B?" + Base64.getEncoder().encodeToString(mail.getSubject().getBytes()) + "?=");
         outputStream.println("Content-Type: text/plain; charset=utf-8\n");
         outputStream.println(mail.getMessage());
-        sendTextToServ(".", COMMAND_OK);
-        // outputStream.println(".");
+
+        outputStream.println(".");
         outputStream.flush();
 
-        // TODO: reset RSET pour éviter de fermer la connexion si on a plusieurs emails à faire
-
-        pass();
-
-        // outputStream.println("QUIT");
-        sendTextToServ("QUIT", QUIT_OK);
-        outputStream.flush();
-
-        close();
-    }
-
-    public boolean sendTextToServ(String message, String waitedCodeResponse)
-    {
-        String response;
-        String[] tokensSpace;
-
-        outputStream.println(message);
-        outputStream.flush();
-
-        try
+        if (keepConnection)
         {
-            // first line
-            response = inputStream.readLine();
-            System.out.println(response);
-
-            tokensSpace = response.split(" ");
-
-            // ignore the next lines
-            while (response != null && !response.isEmpty() && response.equals("\r"))
-            {
-                System.out.println(response);
-                response = inputStream.readLine();
-            }
-        } catch (IOException e)
+            // TODO: Faire RSET
+        } else
         {
-            e.printStackTrace();
-            return false;
-        }
-
-        if (!tokensSpace[0].equals(waitedCodeResponse))
-        {
-            System.out.println("Waited code received is different compare to the needed one!");
-            return false;
-        }
-
-        return true;
-    }
-
-    void pass()
-    {
-        try
-        {
-            // ignore the next lines
-            String line;
-            line = inputStream.readLine();
-            while (line != null && !line.isEmpty() && line.equals("\r"))
-            {
-                System.out.println(line);
-                line = inputStream.readLine();
-            }
-        } catch (IOException e)
-        {
-            e.printStackTrace();
+            pass();
+            outputStream.println("QUIT");
+            outputStream.flush();
         }
     }
 }

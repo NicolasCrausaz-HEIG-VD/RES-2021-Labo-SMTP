@@ -1,6 +1,5 @@
 package res.ressources.pranks;
 
-import com.sun.tools.classfile.RuntimeTypeAnnotations_attribute;
 import res.ressources.config.ConfigManager;
 import res.ressources.entities.Group;
 import res.ressources.entities.Mail;
@@ -44,26 +43,18 @@ public class PrankGenerator
             throw new RuntimeException("Not enough emails to create " + ConfigManager.getInstance().getNumberOfGroups() + "groups of at least 2 people.");
         }
 
-        // Faire des ranges
-        //LinkedList<Group> mails = new LinkedList<>();
+        LinkedList<Group> groups = new LinkedList<>();
 
-        // TODO: Create groups of number people, add them to list
-/*
-        for (int i = 0; i < persons.size(); i++)
+        for (int i = 0; i < persons.size(); i += NB_PEOPLE_IN_GROUP + 1)
         {
-            if (i % NB_PEOPLE_IN_GROUP == 0)
-            {
-
-            }
-
+            groups.add(new Group(persons.subList(i, i + NB_PEOPLE_IN_GROUP)));
         }
-*/
 
+        int cnt = 0;
         for (Prank p : pranks)
         {
-            // Group gr = new Group(); // TODO: Create a mail parser
-            // mails.add(new Mail(hiddenSender, new Group(new Person[]{new Person("test")}), p.getSubject(), p.getBody()));
+            mails.add(new Mail(hiddenSender, groups.get(cnt++), p.getSubject(), p.getBody()));
         }
-        return null;
+        return mails;
     }
 }

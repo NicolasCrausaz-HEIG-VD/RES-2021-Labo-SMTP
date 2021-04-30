@@ -1,8 +1,9 @@
 package res.ressources.pranks;
 
+import res.ressources.entities.Mail;
+
 public class Prank
 {
-    private final Mail
     private final String subject;
     private final String body;
 
