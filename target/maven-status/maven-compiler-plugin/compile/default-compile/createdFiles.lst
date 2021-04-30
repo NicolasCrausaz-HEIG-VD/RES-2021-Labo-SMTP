@@ -1,0 +1,9 @@
+res\ressources\smtp\ISMTPCLient.class
+res\ressources\pranks\PrankGenerator.class
+res\ressources\smtp\SMTPClient.class
+res\ressources\config\ConfigManager.class
+res\ressources\entities\Mail.class
+res\ressources\pranks\Prank.class
+res\ressources\entities\Group.class
+res\ressources\entities\Person.class
+res\App.class

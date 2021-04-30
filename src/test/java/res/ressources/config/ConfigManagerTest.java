@@ -7,6 +7,6 @@ public class ConfigManagerTest
     @Test
     public void shouldOpenConfigFileWithoutThrowing()
     {
-        new ConfigManager();
+        ConfigManager.getInstance();
     }
 }

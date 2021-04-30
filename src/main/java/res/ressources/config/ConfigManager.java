@@ -7,10 +7,11 @@ import java.util.Properties;
 
 public class ConfigManager
 {
+    private static ConfigManager INSTANCE;
     private final static String PROPERTIES_PATH = System.getProperty("user.dir") + "/configs/config.properties";
     private Properties loadedProperties;
 
-    public ConfigManager()
+    private ConfigManager()
     {
         try (InputStream input = new FileInputStream(PROPERTIES_PATH))
         {
@@ -20,6 +21,18 @@ public class ConfigManager
         {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Using Singleton design pattern
+     * @return Instance of ConfigManager
+     */
+    public static ConfigManager getInstance()
+    {
+        if (INSTANCE == null) {
+            INSTANCE = new ConfigManager();
+        }
+        return INSTANCE;
     }
 
     public int getSMTPPort()
@@ -45,5 +58,15 @@ public class ConfigManager
     public String getBlindCopyRecipient()
     {
         return loadedProperties.getProperty("MAIL_BCC");
+    }
+
+    public String getEmailFile()
+    {
+        return loadedProperties.getProperty("EMAILS_FILEPATH");
+    }
+
+    public String getPranksFile()
+    {
+        return loadedProperties.getProperty("PRANKS_FILEPATH");
     }
 }
