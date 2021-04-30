@@ -5,7 +5,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import res.ressources.config.ConfigManager;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,13 +17,13 @@ public class PrankJSONParser
         LinkedList<Prank> pranksList = new LinkedList<>();
         JSONParser jsonParser = new JSONParser();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(ConfigManager.getInstance().getPranksFile())))
+        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + ConfigManager.getInstance().getPranksFile())))
         {
 
-            Object jsonObject = jsonParser.parse(reader);
-            JSONArray pranks = (JSONArray) jsonObject;
+            Object obj = jsonParser.parse(reader);
+            JSONObject jsonObject = (JSONObject)obj;
 
-            for (Object pers : pranks)
+            for (Object pers : (JSONArray) jsonObject.get("pranks"))
             {
                 pranksList.add(parsePrankObject((JSONObject) pers));
             }
@@ -38,7 +37,6 @@ public class PrankJSONParser
 
     private static Prank parsePrankObject(JSONObject pers)
     {
-        JSONObject persObject = (JSONObject) pers.get("pranks");
-        return new Prank((String) persObject.get("subject"), (String) persObject.get("body"));
+        return new Prank((String) pers.get("title"), (String) pers.get("body"));
     }
 }

@@ -1,7 +1,5 @@
 package res.ressources.pranks;
 
-import res.ressources.entities.Mail;
-
 public class Prank
 {
     private final String subject;

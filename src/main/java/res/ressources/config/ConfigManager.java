@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class ConfigManager
 {
-    private static ConfigManager INSTANCE;
+    private static ConfigManager instance;
     private final static String PROPERTIES_PATH = System.getProperty("user.dir") + "/configs/config.properties";
     private Properties loadedProperties;
 
@@ -25,14 +25,16 @@ public class ConfigManager
 
     /**
      * Using Singleton design pattern
+     *
      * @return Instance of ConfigManager
      */
     public static ConfigManager getInstance()
     {
-        if (INSTANCE == null) {
-            INSTANCE = new ConfigManager();
+        if (instance == null)
+        {
+            instance = new ConfigManager();
         }
-        return INSTANCE;
+        return instance;
     }
 
     public int getSMTPPort()

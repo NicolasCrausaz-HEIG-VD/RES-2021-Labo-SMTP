@@ -35,17 +35,21 @@ public class SMTPClient implements ISMTPCLient
 
     public boolean connect()
     {
-        try {
+        try
+        {
             clientSocket = new Socket(smtpAddress, smtpPort);
-            try {
+            try
+            {
                 inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 outputStream = new PrintWriter(clientSocket.getOutputStream());
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 LOG.log(Level.SEVERE, null, e);
                 close();
                 return false;
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             LOG.log(Level.SEVERE, null, e);
             close();
             return false;
@@ -56,33 +60,35 @@ public class SMTPClient implements ISMTPCLient
 
     public void close()
     {
-        //outputStream.println("QUIT");
-        //outputStream.flush();
-        //recieveServerResponse();
-
-        if(inputStream != null)
+        if (inputStream != null)
         {
-            try {
+            try
+            {
                 inputStream.close();
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 LOG.log(Level.SEVERE, null, e);
             }
         }
 
         if (outputStream != null)
         {
-            try {
+            try
+            {
                 outputStream.close();
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 LOG.log(Level.SEVERE, null, e);
             }
         }
 
-        if(clientSocket != null)
+        if (clientSocket != null)
         {
-            try {
+            try
+            {
                 clientSocket.close();
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 LOG.log(Level.SEVERE, null, e);
             }
         }
@@ -95,64 +101,78 @@ public class SMTPClient implements ISMTPCLient
         {
             System.out.println("Connection error occured");
         }
+        recieveServerResponse();
 
         sendEmailWithConnection(mail, false);
 
+        recieveServerResponse();
+        outputStream.println("QUIT");
+        outputStream.flush();
         close();
     }
 
-
     @Override
-    public void sendMultipleMails(List<Mail> mails)
+    public void sendMultipleMails(List<Mail> mails) throws InterruptedException
     {
         if (!connect())
         {
             System.out.println("Connection error occured");
             close();
         }
+        recieveServerResponse();
 
         for (Mail m : mails)
         {
             sendEmailWithConnection(m, true);
+            recieveServerResponse();
+            Thread.sleep(1000);
         }
 
+        recieveServerResponse();
+        outputStream.println("QUIT");
+        outputStream.flush();
         close();
     }
 
     private void recieveServerResponse()
     {
-        try {
-            // Print the server response in logs
+        try
+        {
+            // Log the server response
             String line;
             while (inputStream.ready() && (line = inputStream.readLine()) != null)
             {
                 LOG.log(Level.INFO, line);
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             LOG.log(Level.SEVERE, null, e);
         }
     }
 
     private void sendEmailWithConnection(Mail mail, boolean keepConnection) throws RuntimeException
     {
-        recieveServerResponse();
         outputStream.println("EHLO " + clientName);
         outputStream.flush();
+        LOG.log(Level.INFO, "CLIENT: EHLO " + clientName);
         recieveServerResponse();
 
         outputStream.println("MAIL FROM: " + mail.getFrom());
         outputStream.flush();
+        LOG.log(Level.INFO, "MAIL FROM: " + mail.getFrom());
         recieveServerResponse();
 
         for (Person p : mail.getTo().getVictims())
         {
             outputStream.println("RCPT TO: " + p.getEmail());
             outputStream.flush();
+            LOG.log(Level.INFO, "CLIENT: RCPT TO: " + p.getEmail());
             recieveServerResponse();
         }
 
         outputStream.println("DATA");
         outputStream.flush();
+        LOG.log(Level.INFO, "CLIENT: DATA");
         recieveServerResponse();
 
         outputStream.println("From: " + mail.getTo().getPranker().getEmail());
@@ -178,19 +198,15 @@ public class SMTPClient implements ISMTPCLient
 
         outputStream.println(".");
         outputStream.flush();
+        LOG.log(Level.INFO, ".");
         recieveServerResponse();
 
         if (keepConnection)
         {
-            // TODO: Faire RSET
             outputStream.println("RSET");
             outputStream.flush();
-        } else
-        {
-
-            outputStream.println("QUIT");
-            outputStream.flush();
+            LOG.log(Level.INFO, "CLIENT: RSET");
+            recieveServerResponse();
         }
-        recieveServerResponse();
     }
 }

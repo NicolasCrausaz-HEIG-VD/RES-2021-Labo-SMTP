@@ -27,11 +27,6 @@ public class PrankGenerator
         }
     }
 
-    public LinkedList<Prank> getPranks()
-    {
-        return new LinkedList<>(pranks);
-    }
-
     public LinkedList<Mail> preparePranksMails()
     {
         LinkedList<Person> persons = PersonParser.getPersons();
@@ -45,9 +40,9 @@ public class PrankGenerator
 
         LinkedList<Group> groups = new LinkedList<>();
 
-        for (int i = 0; i < persons.size(); i += NB_PEOPLE_IN_GROUP + 1)
+        for (int i = 0; i < persons.size(); i += NB_PEOPLE_IN_GROUP)
         {
-            groups.add(new Group(persons.subList(i, i + NB_PEOPLE_IN_GROUP)));
+            groups.add(new Group(persons.subList(i, i + NB_PEOPLE_IN_GROUP - 1)));
         }
 
         int cnt = 0;

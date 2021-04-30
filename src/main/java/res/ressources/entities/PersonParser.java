@@ -13,7 +13,7 @@ public class PersonParser
     {
         LinkedList<Person> personsList = new LinkedList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(ConfigManager.getInstance().getPranksFile())))
+        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + ConfigManager.getInstance().getEmailFile())))
         {
             String line = reader.readLine();
 
