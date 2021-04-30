@@ -12,9 +12,11 @@ public class PersonParser
 {
 
     final static String EMAILS_PATH = System.getProperty("user.dir") + "/assets/emails.utf8";
+    final static int MIN_PERSON = 2;
 
     /**
      * Read and parse email file to a list of Persons
+     * Ensure that there is at least 2 persons in the file
      *
      * @return List of Persons
      */
@@ -36,6 +38,9 @@ public class PersonParser
         {
             e.printStackTrace();
         }
+
+        if (personsList.size() < MIN_PERSON)
+            throw new RuntimeException("There should be at least " + MIN_PERSON + " people in the email file.");
 
         return personsList;
     }

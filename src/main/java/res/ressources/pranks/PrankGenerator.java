@@ -42,11 +42,12 @@ public class PrankGenerator
 
         if (NB_PEOPLE_IN_GROUP < 2)
         {
-            throw new RuntimeException("Not enough emails to create " + ConfigManager.getInstance().getNumberOfGroups() + "groups of at least 2 people.");
+            throw new RuntimeException("Not enough emails to create " + ConfigManager.getInstance().getNumberOfGroups() + " groups of at least 2 people.");
         }
 
         LinkedList<Group> groups = new LinkedList<>();
 
+        // TODO: Fix this (should not create group of 1 )
         for (int i = 0; i < persons.size(); i += NB_PEOPLE_IN_GROUP)
         {
             groups.add(new Group(persons.subList(i, i + NB_PEOPLE_IN_GROUP - 1)));

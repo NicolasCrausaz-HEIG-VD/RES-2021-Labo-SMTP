@@ -12,7 +12,9 @@ import java.util.List;
 
 public class PrankJSONParser
 {
-    final static String PRANKS_PATH = System.getProperty("user.dir") + "/assets/pranks.json";
+    private final static String PRANKS_PATH = System.getProperty("user.dir") + "/assets/pranks.json";
+    private final static int MIN_PRANKS = 1;
+
     public static List<Prank> getPranks()
     {
         LinkedList<Prank> pranksList = new LinkedList<>();
@@ -32,6 +34,10 @@ public class PrankJSONParser
         {
             e.printStackTrace();
         }
+
+        if (pranksList.size() < MIN_PRANKS)
+            throw new RuntimeException("There should be at least " + MIN_PRANKS + " pranks in the pranks file.");
+
         return pranksList;
     }
 
