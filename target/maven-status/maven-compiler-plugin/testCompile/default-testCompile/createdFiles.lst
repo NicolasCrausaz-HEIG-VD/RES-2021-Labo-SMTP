@@ -1,0 +1,6 @@
+res\ressources\entities\PersonTest.class
+res\ressources\prank\PrankJSONParserTest.class
+res\ressources\config\ConfigManagerTest.class
+res\ressources\prank\PrankGeneratorTest.class
+res\ressources\smtp\SMTPClientTest.class
+res\ressources\entities\GroupTest.class

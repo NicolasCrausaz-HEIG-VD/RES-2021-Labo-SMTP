@@ -1,6 +1,7 @@
 package res.ressources.smtp;
 
 import org.junit.Test;
+import res.ressources.config.ConfigManager;
 import res.ressources.entities.Group;
 import res.ressources.entities.Mail;
 import res.ressources.entities.Person;
@@ -14,14 +15,18 @@ public class SMTPClientTest
     @Test
     public void shouldConnect()
     {
-        SMTPClient smtpClient = new SMTPClient(25, "localhost", "RobotApp");
+        SMTPClient smtpClient = new SMTPClient(ConfigManager.getInstance().getSMTPPort(),
+                                                ConfigManager.getInstance().getSMTPServer(),
+                                                ConfigManager.getInstance().getClientName());
         assertTrue(smtpClient.connect());
     }
 
     @Test
     public void testValidMail()
     {
-        SMTPClient smtpClient = new SMTPClient(25, "localhost", "RobotApp");
+        SMTPClient smtpClient = new SMTPClient(ConfigManager.getInstance().getSMTPPort(),
+                                                ConfigManager.getInstance().getSMTPServer(),
+                                                ConfigManager.getInstance().getClientName());
 
         LinkedList<Person> persons = new LinkedList<>();
         persons.add(new Person("nicolas.crausaz1@heig-vd.ch"));
@@ -40,7 +45,9 @@ public class SMTPClientTest
     @Test(expected = RuntimeException.class)
     public void testUnvalidMail()
     {
-        SMTPClient smtpClient = new SMTPClient(25, "localhost", "RobotApp");
+        SMTPClient smtpClient = new SMTPClient(ConfigManager.getInstance().getSMTPPort(),
+                                                ConfigManager.getInstance().getSMTPServer(),
+                                                ConfigManager.getInstance().getClientName());
 
         LinkedList<Person> persons = new LinkedList<>();
         persons.add(new Person("nicolas.crausaz1@heig-vd.ch"));
@@ -56,11 +63,11 @@ public class SMTPClientTest
     }
 
     @Test
-    public void testMultipleValidsMails()
+    public void testMultipleValidsMails() throws InterruptedException
     {
-        final int NB_MAILS_TO_SEND = 4;
-
-        SMTPClient smtpClient = new SMTPClient(25, "localhost", "RobotApp");
+        SMTPClient smtpClient = new SMTPClient(ConfigManager.getInstance().getSMTPPort(),
+                                                ConfigManager.getInstance().getSMTPServer(),
+                                                ConfigManager.getInstance().getClientName());
 
         LinkedList<Person> persons = new LinkedList<>();
         persons.add(new Person("nicolas.crausaz1@heig-vd.ch"));
@@ -70,11 +77,12 @@ public class SMTPClientTest
 
         Group group = new Group(persons);
 
-        Mail mail = new Mail("test@test.com", group, "test", "message");
+        LinkedList<Mail> mails = new LinkedList<>();
+        mails.add(new Mail("test@test.com", group, "test", "message"));
+        mails.add(new Mail("test@test.com", group, "test", "message"));
+        mails.add(new Mail("test@test.com", group, "test", "message"));
+        mails.add(new Mail("test@test.com", group, "test", "message"));
 
-        for (int i = 0; i < NB_MAILS_TO_SEND; ++i)
-        {
-            smtpClient.sendMail(mail);
-        }
+        smtpClient.sendMultipleMails(mails);
     }
 }

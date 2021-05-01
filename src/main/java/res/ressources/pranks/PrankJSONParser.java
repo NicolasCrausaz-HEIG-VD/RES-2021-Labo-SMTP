@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PrankJSONParser
 {
-    private final static String PRANKS_PATH = System.getProperty("user.dir") + "/assets/pranks.json";
+    private final static String PRANKS_PATH = System.getProperty("user.dir") + "/configs/pranks.json";
     private final static int MIN_PRANKS = 1;
 
     public static List<Prank> getPranks()

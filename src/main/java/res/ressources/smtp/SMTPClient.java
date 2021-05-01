@@ -213,7 +213,7 @@ public class SMTPClient implements ISMTPCLient
         outputStream.println("Cc: " + ConfigManager.getInstance().getCopyRecipient());
         outputStream.println("Bcc: " + ConfigManager.getInstance().getBlindCopyRecipient());
 
-        outputStream.println("Subject: =?utf-8?B?" + Base64.getEncoder().encodeToString(mail.getSubject().getBytes()) + "?=");
+        outputStream.println("Subject: =?utf-8?B?" + Base64.getEncoder().encodeToString(mail.getSubject().getBytes(StandardCharsets.UTF_8)) + "?=");
         outputStream.println("Content-Type: text/plain; charset=utf-8\n");
         outputStream.println(mail.getMessage());
 

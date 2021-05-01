@@ -11,7 +11,7 @@ import java.util.List;
 public class PersonParser
 {
 
-    final static String EMAILS_PATH = System.getProperty("user.dir") + "/assets/emails.utf8";
+    final static String EMAILS_PATH = System.getProperty("user.dir") + "/configs/emails.utf8";
     final static int MIN_PERSON = 2;
 
     /**
