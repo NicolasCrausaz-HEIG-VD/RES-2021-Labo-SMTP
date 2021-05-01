@@ -15,6 +15,7 @@ import java.util.Random;
  */
 public class PrankGenerator
 {
+    private final static int MIN_PEOPLE_IN_GROUP = 2;
     private final List<Prank> pranks;
 
     public PrankGenerator()
@@ -40,17 +41,24 @@ public class PrankGenerator
 
         final int NB_PEOPLE_IN_GROUP = persons.size() / ConfigManager.getInstance().getNumberOfGroups();
 
-        if (NB_PEOPLE_IN_GROUP < 2)
+        if (NB_PEOPLE_IN_GROUP < MIN_PEOPLE_IN_GROUP)
         {
             throw new RuntimeException("Not enough emails to create " + ConfigManager.getInstance().getNumberOfGroups() + " groups of at least 2 people.");
         }
 
+        final int lefts = persons.size() % ConfigManager.getInstance().getNumberOfGroups();
+
         LinkedList<Group> groups = new LinkedList<>();
 
-        // TODO: Fix this (should not create group of 1 )
-        for (int i = 0; i < persons.size(); i += NB_PEOPLE_IN_GROUP)
+        for (int i = 0; i < persons.size() - lefts; i += NB_PEOPLE_IN_GROUP)
         {
-            groups.add(new Group(persons.subList(i, i + NB_PEOPLE_IN_GROUP - 1)));
+            groups.add(new Group(persons.subList(i, i + NB_PEOPLE_IN_GROUP)));
+        }
+
+        // Merge alone persons to other groups
+        for (int i = 0; i < lefts; ++i)
+        {
+            groups.get(i).addVictim(persons.get(persons.size() - lefts + i));
         }
 
         int cnt = 0;

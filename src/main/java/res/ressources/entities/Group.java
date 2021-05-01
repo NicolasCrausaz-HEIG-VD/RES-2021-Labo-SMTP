@@ -55,4 +55,13 @@ public class Group
     {
         return victims;
     }
+
+    /**
+     * Add one more  person to the victims
+     * @param person The person to add to the victims list
+     */
+    public void addVictim(Person person)
+    {
+        victims.add(person);
+    }
 }
