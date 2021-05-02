@@ -62,10 +62,10 @@ La liste des mails / pranks sera ensuite prête à envoyer par le SMTPClient.
 #### Person
 Cette classe modélise une personne et plus précisément un email pour cette application.
 Elle va être utilisée pour constituer les groupes.
-Le format de l'email doit est validé lors de la cération d'un objet Person.
+Le format de l'email doit est validé lors de la création d'un objet Person.
 
 ##### PersonParser
-Cette classe est un parser texte utilisé afin de récupérer le addressses mails contenues dans le fichier lié.
+Cette classe est un parser texte utilisé afin de récupérer les addresses mails contenues dans le fichier lié.
 Les données lues sont sérialisées en object Person.
 
 #### PrankJSONParser
@@ -84,8 +84,8 @@ Voici un exemple d'une intération client-serveur du protocole SMTP, dans notre 
 ![diagramme de classe](figures/SequenceDiagram.png)
 
 Dans cet exemple, on envoie 1 seul mail à plusieurs destinataires, puis on ferme la connexion.
-Il serait également possible d'envoyer plusieurs mails à la suite en envoyant une requête "RSET" après le ".".
-Le serveur répondrait "250 OK" en cas de succès. Il serait ensuite possible de recréer tout le processus de puis la commande"EHLO clientName".
+Il serait également possible d'envoyer plusieurs mails à la suite en envoyant une requête _RSET_ après le _"."_.
+Le serveur répondrait "250 OK" en cas de succès. Il serait ensuite possible de recréer tout le processus depuis la commande _EHLO clientName"_
 
 ## Tests
 
@@ -98,15 +98,15 @@ Il vaut mieux donc utilisé le mock server pour effectuer les tests.
 
 ## Améliorations possibles
 
-Nous avons un dernier problème qui persiste lors d'envoie multiple d'email. Il arrive que certains mails soient vides.
-Pour corriger ce problème, nous avons temporisé l'envoi mutiple par une attente d'une demi seconde entre chaque mail.
+Nous avons un dernier problème qui persiste lors d'envoi multiple d'email. Il arrive que certains mails soient vides.
+Pour corriger ce problème, nous avons temporisé l'envoi multiple par une attente d'une demi seconde entre chaque mail.
 
 
 ## Configuration
 
 Pour utiliser cette application, commencez par clone ce repository.
 
-Afin d'être prêt à envoyer vous pranks, vous allez d'abord devoir préparer quelques élèments.
+Afin d'être prêt à envoyer vous pranks, vous allez d'abord devoir préparer quelques éléments.
 Premièrement, remplissez le fichier d'adresses mails [fichier d'adresses mails](configs/emails.utf8) (configs/emails.utf8) avec tous les emails auquel vous souhaitez envoyer et recevoir des pranks.
 Ensuite, remplissez le [fichier de pranks](configs/pranks.json) (configs/pranks.json) avec vos meilleures blagues, chaque prank doit avoir un titre (qui sera le sujet du mail) et un contenu (corps du mail).
 
