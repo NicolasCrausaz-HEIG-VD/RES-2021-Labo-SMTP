@@ -135,7 +135,7 @@ public class SMTPClient implements ISMTPCLient
         {
             sendEmailWithConnection(m, true);
             recieveServerResponse();
-            Thread.sleep(1000);
+            Thread.sleep(600);
         }
 
         recieveServerResponse();
