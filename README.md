@@ -7,13 +7,13 @@
 Ce laboratoire fait partie du cours RES de l'HEIG-VD. Il consiste en l'implémentation d'un logiciel d'envoi de "prank" par email.
 
 Les objectifs de ce laboratoire sont de:
-- Devenir familier avec le *protocole SMTP*, en travaillant avec les messages SMTP dans utiliser de librairies spécifiques pour SMTP.
+- Devenir familier avec le *protocole SMTP*, en travaillant avec les messages SMTP sans utiliser de librairies spécifiques pour SMTP.
 - Utiliser des outils de test client-serveur, comme un "mock server".
 - Créer et envoyer des _emails forgés_
 
 ## Fonctionnalités
 
-Le fonctionnement de l'application se résumer assez simplement:
+Le fonctionnement de l'application se résume assez simplement:
 
 Le programme réparti un certain nombre de personnes (adresses mail) dans un certain nombre de groupes (tout ceci est configurable).
 Chaque groupe contient 1 "pranker" considéré comme l'expéditeur de l'email forgé, les autres membres du groupe seront considérés
@@ -24,19 +24,70 @@ Les pranks sont choisis aléatoirement parmi une liste personnalisable.
 
 ## Implémentation
 
-Class Diagram
+Diagramme de classe (UML)
 
 ![diagramme de classe](figures/UML.png)
 
-expliquer les différents aspects 7 particularitées des classes
+Nous allons maintenant expliquer les différents aspects / particularités de chaque classe (de gauche à droite)
 
-Example of interactions (client-server level)
+### SMTPCLient
+Cette classe permet d'envoyer les mails au serveur SMTP.
+Sa particularité principale est qu'elle ne traite pas les codes erreurs reçu par le serveur.
+Elle lit / consomme chaque réponse du serveur mais ne fait aucune gestion d'erreur.
+Cependant, elle log toutes les réponses du serveur et ces propres envois, afin d'avoir un tracé de ce qui s'est passé.
+Si une erreur est parvenue pendant l'envoi du mail, elle sera loggé au niveau "SEVERE" et l'email ne s'enverra pas.
 
+### Mail
+Cette classe modélise un mail qui devra être envoyer avec le SMTPClient.
 
-Nous avons implémenté une petite série de tests pouvant être executé; *attention*, certains tests envoient des emails.
+### ConfigManager
+Cette classe permet de récupérer les informations de configuration de l'application.
+Elle vérifie également que ces dernières soient conforme au attentes.
+Elle vérife aussi que les entrées obligatoire contiennent bien une donnée.
+Nous avons décidé d'en faire un Singleton.
+
+### App
+Cette classe utilise simplement les autres classes afin de faire tourner le programme.
+
+### Group
+Cette classe modélise un groupe qui contient un "pranker" qui correspond au faux envoyeur du futur email.
+Le groupe contient également une liste de "victimes" qui correspondent au receveur du futur email.
+
+### PrankGenerator
+Cette classe gère toutes la logique de l'application.
+C'est-à-dire qu'elle créée les groupes avec le bon nombre de personnes.
+Elle génère également les emails à partir des pranks.
+
+### Person
+Cette classe modélise une personne et plus précisément un email pour cette application.
+Elle va être utilisée pour constituer les groupes.
+
+### PrankJSONParser
+Cette classe est un parser JSON utilisé afin de récupérer et générer les pranks présents dans le fichier pranks.json.
+
+### Prank
+
+### PersonParser
+
+Voici un exemple d'une interation client-serveur du protocole SMTP.
+
+![diagramme de classe](figures/SequenceDiagram.png)
+
+Dans cet exemple, on envoie 1 seul mail à plusieurs destinataires, puis on ferme la connexion.
+Il serait également possible d'envoyer plusieurs mails à la suite en envoyant une requête "RSET" après le ".".
+Le serveur répondrait "250 OK" en cas de succès. Il serait ensuite possible de recréer tout le processus de puis la commande"EHLO clientName".
+
+## Tests
+
+Nous avons réalisé des tests unitaires pour presque toutes les classes créées. 
+Les tests unitaires les plus poussés étant ceux du client SMTP, objectif principal du laboratoire.
+Tous ces tests pouvant être executés; *attention*, certains tests envoient des emails (ceux du client SMTP).
 Il vaut mieux donc utilisé le mock server pour effectuer les tests.
 
 `$ mvn clean test`
+
+## Améliorations possibles
+
 
 
 ## Configuration

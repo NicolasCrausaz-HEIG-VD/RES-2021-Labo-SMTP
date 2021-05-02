@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Class that genenrate pranks and prepare them into email to be send afterwards.
+ * Class that generate pranks and prepare them into email to be send afterwards.
  * @author Alec Berney
  * @author Nicolas Crausaz
  */
