@@ -9,6 +9,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * Test the PrankGenerator class
+ * @author Alec Berney
+ * @author Nicolas Crausaz
+ */
 public class PrankGeneratorTest
 {
 

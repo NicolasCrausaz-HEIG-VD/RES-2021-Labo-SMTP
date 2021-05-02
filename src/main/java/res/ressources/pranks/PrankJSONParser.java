@@ -10,6 +10,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Reads and parse a prank list from a JSON file
+ * @author Alec Berney
+ * @author Nicolas Crausaz
+ */
 public class PrankJSONParser
 {
     private final static String PRANKS_PATH = System.getProperty("user.dir") + "/configs/pranks.json";

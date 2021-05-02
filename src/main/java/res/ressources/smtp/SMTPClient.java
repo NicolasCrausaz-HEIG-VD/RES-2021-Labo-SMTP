@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 
 /**
  * SMTP client to send mails
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public class SMTPClient implements ISMTPCLient
 {

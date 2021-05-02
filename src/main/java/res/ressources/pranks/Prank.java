@@ -2,6 +2,8 @@ package res.ressources.pranks;
 
 /**
  * Represent a prank ressource
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public class Prank
 {

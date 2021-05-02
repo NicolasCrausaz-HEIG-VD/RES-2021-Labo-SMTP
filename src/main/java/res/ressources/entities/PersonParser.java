@@ -6,7 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Reads and parse an person list from a file
+ * Reads and parse a person list from a file
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public class PersonParser
 {

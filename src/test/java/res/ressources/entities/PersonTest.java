@@ -4,6 +4,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test the Person class
+ * @author Alec Berney
+ * @author Nicolas Crausaz
+ */
 public class PersonTest
 {
     @Test

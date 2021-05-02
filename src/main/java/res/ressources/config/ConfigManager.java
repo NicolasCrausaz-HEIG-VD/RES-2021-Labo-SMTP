@@ -7,6 +7,8 @@ import java.util.Properties;
 
 /**
  * This class maps the config file to be accessible by the program
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public class ConfigManager
 {

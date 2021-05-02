@@ -2,6 +2,8 @@ package res.ressources.entities;
 
 /**
  * Represents a simple mail
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public class Mail
 {

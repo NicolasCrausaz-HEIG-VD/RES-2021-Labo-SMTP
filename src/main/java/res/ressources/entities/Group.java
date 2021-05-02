@@ -7,6 +7,8 @@ import java.util.Random;
 /**
  * Represents a Group of at least 2 people.
  * A group of N people will be composed with one pranker and (n-1) victims.
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public class Group
 {

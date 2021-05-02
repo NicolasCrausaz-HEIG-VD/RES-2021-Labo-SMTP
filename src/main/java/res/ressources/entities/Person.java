@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 /**
  * Represents a person that is implicated (author or victim) in a SMTP prank
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public class Person
 {

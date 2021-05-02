@@ -10,6 +10,11 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test the SMTPClient class
+ * @author Alec Berney
+ * @author Nicolas Crausaz
+ */
 public class SMTPClientTest
 {
     @Test

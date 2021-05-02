@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Necessities for SMTPClient
+ * @author Alec Berney
+ * @author Nicolas Crausaz
  */
 public interface ISMTPCLient
 {
