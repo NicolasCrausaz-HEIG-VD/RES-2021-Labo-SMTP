@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: res.ressources.config.ConfigManagerTest
+Test set: res.ressources.prank.PrankJSONParserTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 sec
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec

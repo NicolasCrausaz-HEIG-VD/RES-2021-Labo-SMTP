@@ -24,52 +24,62 @@ Les pranks sont choisis aléatoirement parmi une liste personnalisable.
 
 ## Implémentation
 
-Diagramme de classe (UML)
+### Diagramme de classe (UML)
 
 ![diagramme de classe](figures/UML.png)
 
 Nous allons maintenant expliquer les différents aspects / particularités de chaque classe (de gauche à droite)
 
-### SMTPCLient
+#### SMTPCLient
 Cette classe permet d'envoyer les mails au serveur SMTP.
-Sa particularité principale est qu'elle ne traite pas les codes erreurs reçu par le serveur.
+Sa particularité principale est qu'elle ne traite pas les codes erreurs reçues par le serveur.
 Elle lit / consomme chaque réponse du serveur mais ne fait aucune gestion d'erreur.
-Cependant, elle log toutes les réponses du serveur et ces propres envois, afin d'avoir un tracé de ce qui s'est passé.
-Si une erreur est parvenue pendant l'envoi du mail, elle sera loggé au niveau "SEVERE" et l'email ne s'enverra pas.
+Cependant, elle log toutes les réponses du serveur et ces propres envois, afin d'avoir une trace de ce qui s'est passé.
+Si une erreur est parvenue pendant l'envoi du mail, elle sera loggée au niveau "SEVERE" et l'email ne s'enverra pas.
+Cette classe implémente l'interface ISMTPClient qui représente les méthodes qu'un client SMTP doit proposer au minimum dans notre conception.
 
-### Mail
-Cette classe modélise un mail qui devra être envoyer avec le SMTPClient.
+#### Mail
+Cette classe modélise un mail qui pourra être envoyé à l'aide du SMTPClient.
 
-### ConfigManager
+#### ConfigManager
 Cette classe permet de récupérer les informations de configuration de l'application.
-Elle vérifie également que ces dernières soient conforme au attentes.
-Elle vérife aussi que les entrées obligatoire contiennent bien une donnée.
+Elle vérifie également que ces dernières soient conformes aux attentes.
+Elle vérife aussi que les entrées obligatoires contiennent bien une valeur.
 Nous avons décidé d'en faire un Singleton.
 
-### App
+#### App
 Cette classe utilise simplement les autres classes afin de faire tourner le programme.
 
-### Group
-Cette classe modélise un groupe qui contient un "pranker" qui correspond au faux envoyeur du futur email.
-Le groupe contient également une liste de "victimes" qui correspondent au receveur du futur email.
+#### Group
+Cette classe modélise un groupe qui contient un "pranker" qui correspond à l'expéditeur du futur email.
+Le groupe contient également une liste de "victimes" qui correspondent aux destinataires du futur email.
 
-### PrankGenerator
-Cette classe gère toutes la logique de l'application.
-C'est-à-dire qu'elle créée les groupes avec le bon nombre de personnes.
-Elle génère également les emails à partir des pranks.
+#### PrankGenerator
+Cette classe gère toute la logique de l'application.
+C'est-à-dire qu'elle créée les groupes avec le bon nombre de personnes et génère également les emails à partir des pranks.
+La liste des mails / pranks sera ensuite prête à envoyer par le SMTPClient.
 
-### Person
+#### Person
 Cette classe modélise une personne et plus précisément un email pour cette application.
 Elle va être utilisée pour constituer les groupes.
+Le format de l'email doit est validé lors de la cération d'un objet Person.
 
-### PrankJSONParser
+##### PersonParser
+Cette classe est un parser texte utilisé afin de récupérer le addressses mails contenues dans le fichier lié.
+Les données lues sont sérialisées en object Person.
+
+#### PrankJSONParser
 Cette classe est un parser JSON utilisé afin de récupérer et générer les pranks présents dans le fichier pranks.json.
+Les données lues sont sérialisées en object Prank.
 
-### Prank
+#### Prank
+Cette classe représente un prank un contenant un titre et un contenu. Un prank sera transformé en Mail
+durant l'exécution afin d'être envoyé par le SMTPClient.
 
-### PersonParser
 
-Voici un exemple d'une interation client-serveur du protocole SMTP.
+### Diagramme de séquence
+
+Voici un exemple d'une intération client-serveur du protocole SMTP, dans notre application.
 
 ![diagramme de classe](figures/SequenceDiagram.png)
 
@@ -88,9 +98,13 @@ Il vaut mieux donc utilisé le mock server pour effectuer les tests.
 
 ## Améliorations possibles
 
+Nous avons un dernier problème qui persiste lors d'envoie multiple d'email. Il arrive que certains mails soient vides.
+Pour corriger ce problème, nous avons temporisé l'envoi mutiple par une attente de 1 seconde entre chaque mail.
 
 
 ## Configuration
+
+Pour utiliser cette application, commencez par clone ce repository.
 
 Afin d'être prêt à envoyer vous pranks, vous allez d'abord devoir préparer quelques élèments.
 Premièrement, remplissez le fichier d'adresses mails [fichier d'adresses mails](configs/emails.utf8) (configs/emails.utf8) avec tous les emails auquel vous souhaitez envoyer et recevoir des pranks.
@@ -130,4 +144,4 @@ Tout est prêt, vous pouvez désormais commencer à envoyer vos pranks en exécu
 
 `$ java -jar .\target\smtp-pranks-1.0-SNAPSHOT-launcher.jar`
 
-Si vous avez utilisé notre serveur Mock, les mails sont visible sur [http://localhost:8080](http://localhost:8080).
+Si vous avez utilisé notre serveur Mock, les mails sont visibles sur [http://localhost:8282](http://localhost:8282).
