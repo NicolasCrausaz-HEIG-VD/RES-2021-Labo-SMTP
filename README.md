@@ -99,7 +99,7 @@ Il vaut mieux donc utilisé le mock server pour effectuer les tests.
 ## Améliorations possibles
 
 Nous avons un dernier problème qui persiste lors d'envoi multiple d'email. Il arrive que certains mails soient vides.
-Pour corriger ce problème, nous avons temporisé l'envoi multiple par une attente d'une demi seconde entre chaque mail.
+Pour corriger ce problème, nous avons temporisé l'envoi multiple par une attente d'une demi seconde entre chaque mail (voir issue [#12](https://github.com/nicrausaz/RES-2021-Labo-SMTP/issues/12))
 
 
 ## Configuration
