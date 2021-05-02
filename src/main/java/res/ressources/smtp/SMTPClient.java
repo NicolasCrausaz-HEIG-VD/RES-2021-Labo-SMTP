@@ -145,6 +145,17 @@ public class SMTPClient implements ISMTPCLient
     }
 
     /**
+     * Send the message given to the server
+     * Also log it
+     */
+    private void sendMessageToServer(String message)
+    {
+        outputStream.println(message);
+        outputStream.flush();
+        LOG.log(Level.INFO, "CLIENT: " + message);
+    }
+
+    /**
      * Read and log server response
      */
     private void recieveServerResponse()
@@ -172,27 +183,19 @@ public class SMTPClient implements ISMTPCLient
      */
     private void sendEmailWithConnection(Mail mail, boolean keepConnection)
     {
-        outputStream.println("EHLO " + clientName);
-        outputStream.flush();
-        LOG.log(Level.INFO, "CLIENT: EHLO " + clientName);
+        sendMessageToServer("EHLO " + clientName);
         recieveServerResponse();
 
-        outputStream.println("MAIL FROM: " + mail.getFrom());
-        outputStream.flush();
-        LOG.log(Level.INFO, "MAIL FROM: " + mail.getFrom());
+        sendMessageToServer("MAIL FROM: " + mail.getFrom());
         recieveServerResponse();
 
         for (Person p : mail.getTo().getVictims())
         {
-            outputStream.println("RCPT TO: " + p.getEmail());
-            outputStream.flush();
-            LOG.log(Level.INFO, "CLIENT: RCPT TO: " + p.getEmail());
+            sendMessageToServer("RCPT TO: " + p.getEmail());
             recieveServerResponse();
         }
 
-        outputStream.println("DATA");
-        outputStream.flush();
-        LOG.log(Level.INFO, "CLIENT: DATA");
+        sendMessageToServer("DATA");
         recieveServerResponse();
 
         outputStream.println("From: " + mail.getTo().getPranker().getEmail());
@@ -219,16 +222,12 @@ public class SMTPClient implements ISMTPCLient
         outputStream.println("Content-Type: text/plain; charset=utf-8\n");
         outputStream.println(mail.getMessage());
 
-        outputStream.println(".");
-        outputStream.flush();
-        LOG.log(Level.INFO, ".");
+        sendMessageToServer(".");
         recieveServerResponse();
 
         if (keepConnection)
         {
-            outputStream.println("RSET");
-            outputStream.flush();
-            LOG.log(Level.INFO, "CLIENT: RSET");
+            sendMessageToServer("RSET");
             recieveServerResponse();
         }
     }
